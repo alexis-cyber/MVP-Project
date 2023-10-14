@@ -1,58 +1,56 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState} from "react";
 
-function App() {
-  const [originalUrl, setOriginalUrl] = useState("");
-  const [shortenedUrl, setShortenedUrl] = useState("");
-  const [allUrls, setAllUrls] = useState([]);
+const ShortenUrlForm = () => {
+  const [origUrl, setOrigUrl] = useState('');
+  const [shortUrl, setShortUrl] = useState('');
+  const [error, setError] = useState('');
 
-  
-  async function getAllUrls() {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     try {
-      const response = await axios.get("http://localhost:8000/urls");
-      setAllUrls(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
- 
-  async function shortenUrl() {
-    try {
-      const response = await axios.post("http://localhost:8000/urls", {
-        originalUrl,
+      const response = await fetch('http://localhost:3333/api/short', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ origUrl }),
       });
-      setShortenedUrl(response.data.shortenedUrl);
-      getAllUrls();
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
-  
-  useEffect(() => {
-    getAllUrls();
-  }, []);
+      const data = await response.json();
+
+      if (response.ok) {
+        setShortUrl(data.shortUrl);
+        setError('');
+      } else {
+        setShortUrl('');
+        setError(data);
+      }
+    } catch (err) {
+      console.log(err);
+      setError('Error occurred. Please try again later.');
+    }
+  };
 
   return (
-    <div className="App">
-      <input
-        type="text"
-        value={originalUrl}
-        onChange={(e) => setOriginalUrl(e.target.value)}
-      />
-      <button onClick={shortenUrl}>Shorten</button>
-      <p>Full URL: {originalUrl}</p>
-      <p>Shortened URL: {shortenedUrl}</p>
-      <ul>
-        {allUrls.map((url) => (
-          <li key={url.id}>
-            <a href={url.originalUrl}>{url.shortenedUrl}</a>
-          </li>
-        ))}
-      </ul>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={origUrl}
+          onChange={(e) => setOrigUrl(e.target.value)}
+          placeholder="Enter URL to shorten"
+        />
+        <button type="submit">Shorten URL</button>
+      </form>
+      {error && <p>{error}</p>}
+      {shortUrl && (
+        <p>
+          Shortened URL: <a href={shortUrl}>{shortUrl}</a>
+        </p>
+      )}
     </div>
   );
-}
+};
 
-export default App;
+export default ShortenUrlForm;

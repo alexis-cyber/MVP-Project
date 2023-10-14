@@ -1,22 +1,23 @@
 const express = require('express');
 const connectDB = require ('./config/database');
+//const indexRouter = require('./controllers/UrlController');
+const urlsRouter = require('./Routers/UrlRouter');
 const dotenv= require ('dotenv');
 const cors = require('cors');
-dotenv.config({ path: './.env' });
+dotenv.config();
 
 const app = express();
 
-app.use(express.urlencoded({ extended: true }));
+//app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 connectDB();
 
-const indexRouter = require('./controllers/UrlController');
-const urlsRouter = require('./Routers/UrlRouter');
 
 
 
-app.use('/', indexRouter);
+
+//app.use('/', indexRouter);
 app.use('/api', urlsRouter);
 
 // Server Setup

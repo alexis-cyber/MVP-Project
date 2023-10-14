@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function UrlShortener({ getAllUrls, urls }) {
   const [originalUrl, setOriginalUrl] = useState("");
@@ -8,16 +8,16 @@ function UrlShortener({ getAllUrls, urls }) {
   async function deleteUrl(id) {
     try {
       await axios.delete(`http://localhost:8000/urls/${id}`);
+      getAllUrls();
     } catch (error) {
       console.log("Error deleting URL:", error);
     }
-    getAllUrls();
   }
 
   async function updateUrl(id, newUrl) {
     try {
       await axios.put(`http://localhost:8000/urls/${id}`, {
-        url: newUrl,
+        origUrl: newUrl,
       });
       getAllUrls();
     } catch (error) {
@@ -27,8 +27,8 @@ function UrlShortener({ getAllUrls, urls }) {
 
   async function shortenUrl() {
     try {
-      const response = await axios.post("http://localhost:8000/urls", {
-        url: originalUrl,
+      const response = await axios.post("http://localhost:8000/short", {
+        origUrl: originalUrl,
       });
       setOriginalUrl("");
       setShortenedUrl(response.data.shortUrl);
@@ -40,12 +40,30 @@ function UrlShortener({ getAllUrls, urls }) {
 
   return (
     <div>
+      <input
+        type="text"
+        placeholder="Enter the original URL..."
+        value={originalUrl}
+        onChange={(e) => setOriginalUrl(e.target.value)}
+      />
+      <button onClick={shortenUrl}>Shorten</button>
+      <p>Shortened URL: {shortenedUrl}</p>
+
       {urls.map((u) => (
-        <div className="serverDiv" key={u.id}>
-          {" "}
-          {/* Added a key for each item */}
-          <h1 className="returnUrl1">{u.originalUrl}</h1>
+        <div className="serverDiv" key={u._id}> {/* Use _id as the key */}
+          <h1 className="returnUrl1">{u.origUrl}</h1> {/* Change to origUrl */}
           <h1 className="returnUrl2">{u.shortUrl}</h1>
+          <button onClick={() => deleteUrl(u._id)}>Delete</button>
+          <button
+            onClick={() => {
+              const newUrl = prompt("Enter a new URL:", u.origUrl);
+              if (newUrl !== null) {
+                updateUrl(u._id, newUrl);
+              }
+            }}
+          >
+            Update
+          </button>
         </div>
       ))}
     </div>
