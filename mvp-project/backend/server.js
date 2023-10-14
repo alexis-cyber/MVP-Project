@@ -1,18 +1,20 @@
-import express from 'express';
-import connectDB from './config/database';
-import dotenv from 'dotenv';
+const express = require('express');
+const connectDB = require ('./config/database');
+const dotenv= require ('dotenv');
+const cors = require('cors');
 dotenv.config({ path: './.env' });
 
 const app = express();
 
-connectDB();
-
-import indexRouter from './controllers/UrlController.js';
-import urlsRouter from './Routers/UrlRouter.js';
-
-// Body Parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors());
+connectDB();
+
+const indexRouter = require('./controllers/UrlController');
+const urlsRouter = require('./Routers/UrlRouter');
+
+
 
 app.use('/', indexRouter);
 app.use('/api', urlsRouter);

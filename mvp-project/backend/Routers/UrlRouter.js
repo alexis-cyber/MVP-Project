@@ -2,16 +2,17 @@ const Express = require('express');
 const router = Express.Router();
 const shortid = require('shortid');
 const Url = require('../models/UrlModel');
-const utils = require('../utils/utils');
+const {validateUrl} = require('../utils/util');
 require('dotenv').config({ path: '../.env' });
 
 
 router.post('/short', async (req, res) => {
-  const { origUrl } = req.body;
+  const  origUrl  = req.body;
+  console.log(req.body)
   const base = process.env.BASE;
 
   const urlId = shortid.generate();
-  if (utils.validateUrl(origUrl)) {
+  if (validateUrl(origUrl)) {
     try {
       let url = await Url.findOne({ origUrl });
       if (url) {

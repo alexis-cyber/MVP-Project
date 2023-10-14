@@ -1,21 +1,26 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
+const utils = require('../utils/util');
 
 const UrlSchema = new mongoose.Schema({
   urlId: {
     type: String,
-    required: true,
+    // required: true,
   },
   origUrl: {
     type: String,
-    required: true,
+    // required: true,
+    // validate: {
+    //   validator: utils.validateUrl,
+    //   message: 'Invalid Original Url',
+    // },
   },
   shortUrl: {
     type: String,
-    required: true,
+    // required: true,
   },
   clicks: {
     type: Number,
-    required: true,
+    // required: true,
     default: 0,
   },
   date: {
@@ -23,5 +28,6 @@ const UrlSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+const Url = mongoose.model('Url', UrlSchema);
 
-export default mongoose.model('Url', UrlSchema);
+module.exports = Url;

@@ -20,4 +20,4 @@ router.get('/:urlId', async (req, res) => {
   }
 });
 
-export default router;
+module.exports= router;
