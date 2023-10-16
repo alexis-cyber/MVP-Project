@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function UrlShortener({ getAllUrls, urls }) {
   const [originalUrl, setOriginalUrl] = useState("");
@@ -71,6 +71,7 @@ function UrlShortener({ getAllUrls, urls }) {
 }
 
 export default UrlShortener;
+
 
 
 

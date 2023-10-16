@@ -3,7 +3,7 @@ import axios from "axios";
 
 function AddURL({ getAllURLs }) {
   const [url, setURL] = useState({
-    origUrl: "", // Change this to match the backend
+    origUrl: "", 
   });
 
   function handleInputChange(e) {
@@ -13,11 +13,11 @@ function AddURL({ getAllURLs }) {
   const addNewURL = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:8000/short", url) // Update the API endpoint
+      .post("http://localhost:8000/short", url) 
       .then((res) => {
         console.log(res.data);
         getAllURLs();
-        setURL({ origUrl: "" }); // Update the field name
+        setURL({ origUrl: "" }); 
       })
       .catch((error) => {
         console.log(error);
@@ -29,9 +29,9 @@ function AddURL({ getAllURLs }) {
       <input
         type="text"
         placeholder="Enter the original URL..."
-        name="origUrl" // Update the field name
+        name="origUrl" 
         onChange={handleInputChange}
-        value={url.origUrl} // Update the field name
+        value={url.origUrl} 
       />
       <button id="addbtn" onClick={addNewURL}>
         Add

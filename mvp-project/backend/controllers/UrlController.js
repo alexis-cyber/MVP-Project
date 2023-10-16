@@ -9,36 +9,37 @@ const Url = require('../models/UrlModel');
 const shortenUrl = async (req, res) => {
  
 
-  const  origUrl  = req.body;
+  const  {origUrl}  = req.body;
   console.log(req.body)
-  //const base = process.env.BASE;
+  const base = process.env.BASE;
 
-  // const urlId = shortid.generate();
-  // if (validateUrl(origUrl)) {
-  //   try {
-  //     let url = await Url.findOne({ origUrl });
-  //     if (url) {
-  //       res.json(url);
-  //     } else {
-  //       const shortUrl = `${base}/${urlId}`;
+  const urlId = shortid.generate();
+   console.log(urlId)
+  if (validateUrl(origUrl)) {
+    try {
+      let url = await Url.findOne({ origUrl });
+      if (url) {
+        res.json(url);
+      } else {
+        const shortUrl = `${base}/${urlId}`;
 
-  //       url = new Url({
-  //         origUrl,
-  //         shortUrl,
-  //         urlId,
-  //         date: new Date(),
-  //       });
+        url = new Url({
+          origUrl,
+          shortUrl,
+          urlId,
+          date: new Date(),
+        });
 
-  //       await url.save();
-  //       res.json(url);
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //     res.status(500).json('Server Error');
-  //   }
-  // } else {
-  //   res.status(400).json('Invalid Original Url');
-  // }
+        await url.save();
+        res.json(url);
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json('Server Error');
+    }
+  } else {
+    res.status(400).json('Invalid Original Url');
+  }
 }
 
 
