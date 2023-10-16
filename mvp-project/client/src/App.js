@@ -47,7 +47,7 @@ const ShortenUrlForm = () => {
       {error && <p>{error}</p>}
       {shortUrl && (
         <p>
-          Shortened URL: <a href={shortUrl}>{shortUrl}</a>
+          Shortened URL: <a href={origUrl}>{shortUrl}</a>
         </p>
       )}
     </div>
